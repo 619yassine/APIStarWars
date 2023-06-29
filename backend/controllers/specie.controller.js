@@ -4,7 +4,7 @@ const getSpecies = async (req, res) => {
   try {
     const species = await Specie.find();
 
-    res.json(species.map(specie => addHATEOASlinks(specie)));
+    res.json(species.map(specie => addLink(specie)));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -16,7 +16,7 @@ const getSpecieById = async (req, res) => {
 
     if (!specie) return res.status(404).json({ error: 'Specie not found' });
 
-    res.json(addHATEOASlinks(specie));
+    res.json(addLink(specie));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -33,7 +33,7 @@ const createSpecie = async (req, res) => {
 
     const specie = await Specie.create({ _id : newId, ...req.body });
 
-    res.status(201).json(addHATEOASlinks(specie));
+    res.status(201).json(addLink(specie));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -57,7 +57,7 @@ const updateSpecie = async (req, res) => {
 
     if (!specie) return res.status(404).json({ error: 'Specie not found' });
 
-    specie = addHATEOASlinks(specie);
+    specie = addLink(specie);
 
     const updatedAttributes = {};
     for (const [key] of Object.entries(req.body)) {
@@ -72,7 +72,7 @@ const updateSpecie = async (req, res) => {
   }
 };
 
-function addHATEOASlinks(specie) {
+function addLink(specie) {
   const transformedPeople = specie.people.map(characterId => {
     return {
       id: characterId,

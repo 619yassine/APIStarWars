@@ -4,7 +4,7 @@ const getVehicles = async (req, res) => {
   try {
     const vehicles = await Vehicle.find();
 
-    res.json(vehicles.map(vehicle => addHATEOASlinks(vehicle)));
+    res.json(vehicles.map(vehicle => addLink(vehicle)));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -16,7 +16,7 @@ const getVehicleById = async (req, res) => {
 
     if (!vehicle) return res.status(404).json({ error: 'Vehicle not found' });
 
-    res.json(addHATEOASlinks(vehicle));
+    res.json(addLink(vehicle));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -33,7 +33,7 @@ const createVehicle = async (req, res) => {
 
     const vehicle = await Vehicle.create({ _id : newId, ...req.body });
 
-    res.status(201).json(addHATEOASlinks(vehicle));
+    res.status(201).json(addLink(vehicle));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -57,7 +57,7 @@ const updateVehicle = async (req, res) => {
 
     if (!vehicle) return res.status(404).json({ error: 'Vehicle not found' });
 
-    vehicle = addHATEOASlinks(vehicle);
+    vehicle = addLink(vehicle);
 
     const updatedAttributes = {};
     for (const [key] of Object.entries(req.body)) {
@@ -72,7 +72,7 @@ const updateVehicle = async (req, res) => {
   }
 };
 
-function addHATEOASlinks(vehicle) {
+function addLink(vehicle) {
   const transformedPilots = vehicle.pilots.map(characterId => {
     return {
       id: characterId,

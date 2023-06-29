@@ -4,7 +4,7 @@ const getStarships = async (req, res) => {
   try {
     const starships = await Starship.find();
 
-    res.json(starships.map(starship => addHATEOASlinks(starship)));
+    res.json(starships.map(starship => addLink(starship)));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -16,7 +16,7 @@ const getStarshipById = async (req, res) => {
 
     if (!starship) return res.status(404).json({ error: 'Starship not found' });
 
-    res.json(addHATEOASlinks(starship));
+    res.json(addLink(starship));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -33,7 +33,7 @@ const createStarship = async (req, res) => {
 
     const starship = await Starship.create({ _id : newId, ...req.body });
 
-    res.status(201).json(addHATEOASlinks(starship));
+    res.status(201).json(addLink(starship));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -57,7 +57,7 @@ const updateStarship = async (req, res) => {
 
     if (!starship) return res.status(404).json({ error: 'Starship not found' });
 
-    starship = addHATEOASlinks(starship);
+    starship = addLink(starship);
 
     const updatedAttributes = {};
     for (const [key] of Object.entries(req.body)) {
@@ -72,7 +72,7 @@ const updateStarship = async (req, res) => {
   }
 };
 
-function addHATEOASlinks(starship) {
+function addLink(starship) {
   const transformedPilots = starship.pilots.map(characterId => {
     return {
       id: characterId,
